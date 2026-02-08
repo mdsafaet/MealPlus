@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterRequest;
+use App\Models\Role;
 use App\Models\User;
 
 class AuthController extends Controller
@@ -58,6 +59,41 @@ class AuthController extends Controller
 
 // }
 
+public function create(Request $request, Role $role){
+
+  $data = $request->validate([
+ 'name' => 'required|string|max:100|unique:roles,name',
+  ]);
+    $role = Role::create(
+        [
+            'name' => $data['name'],
+        ] );
+
+        
+    return response()->json([
+        'message' => 'User successfully registered',
+        'role' => $role,
+       
+    ], 201);
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public function register(RegisterRequest $request)
 {
     
@@ -67,6 +103,7 @@ class AuthController extends Controller
         'name' => $data['name'],
         'email' => $data['email'],
         'password' => bcrypt($data['password']),
+        'role_id' => $data['role_id'],
     ]);
      $token = auth('api')->login($user);
 
