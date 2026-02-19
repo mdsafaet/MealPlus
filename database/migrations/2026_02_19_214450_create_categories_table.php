@@ -11,11 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('messages', function (Blueprint $table) {
+        Schema::create('categories', function (Blueprint $table) {
             $table->id();
-        $table->foreignId('sender_id')->constrained('users')->cascadeOnDelete();
-        $table->foreignId('receiver_id')->constrained('users')->cascadeOnDelete();
-             $table->text('body');
             $table->timestamps();
         });
     }
@@ -25,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('messages');
+        Schema::dropIfExists('categories');
     }
 };
