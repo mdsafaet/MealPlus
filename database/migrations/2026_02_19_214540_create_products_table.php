@@ -13,6 +13,19 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
+            $table->string('title', 50);
+            $table->string('short_des', 300);
+            $table->string('price');
+            $table->boolean('discount');
+            $table->string('discount_price');
+            $table->string('image');
+            $table->boolean('stock');
+            $table->float(column: 'star');
+            $table->enum(column: 'remark', allowed: ['new', 'popular', 'trending','top','regular']);
+            $table->unsignedBigInteger('category_id');
+            $table->unsignedBigInteger('brand_id');
+            $table->foreign('category_id')->references('id')->on('categories')->restrictOnDelete('cascade');
+            $table->foreign('brand_id')->references('id')->on('brands')->restrictOnDelete('cascade');
             $table->timestamps();
         });
     }
