@@ -13,6 +13,22 @@ return new class extends Migration
     {
         Schema::create('product_reviews', function (Blueprint $table) {
             $table->id();
+            $table->string('description', 100);
+            $table->string('rating', 10);
+            $table->unsignedBigInteger('customer_id');
+            $table->foreign('customer_id')
+                ->references('id')
+                ->on('customers')
+                ->restrictOnUpdate()
+                ->restrictOnDelete();
+
+
+                $table->unsignedBigInteger('product_id');
+                $table->foreign('product_id')
+                ->references('id')
+                ->on('products')
+                ->restrictOnUpdate()    
+                ->restrictOnDelete();
             $table->timestamps();
         });
     }

@@ -13,6 +13,22 @@ return new class extends Migration
     {
         Schema::create('product_wishes', function (Blueprint $table) {
             $table->id();
+
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('product_id');
+
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->restrictOnUpdate()
+                ->restrictOnDelete();
+
+            $table->foreign('product_id')
+                ->references('id')
+                ->on('products')
+                ->restrictOnUpdate()
+                ->restrictOnDelete();
+
             $table->timestamps();
         });
     }

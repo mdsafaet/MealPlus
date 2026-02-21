@@ -11,8 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('prices', function (Blueprint $table) {
+        Schema::create('policies', function (Blueprint $table) {
             $table->id();
+            $table->enum('type', ['refund', 'return', 'shipping', 'privacy', 'terms']);
+            $table->string('description', 300);
             $table->timestamps();
         });
     }
@@ -22,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('prices');
+        Schema::dropIfExists('policies');
     }
 };

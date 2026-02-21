@@ -13,6 +13,20 @@ return new class extends Migration
     {
         Schema::create('product_sliders', function (Blueprint $table) {
             $table->id();
+            $table->string('title', 50);
+            $table->string('short_des', 300);
+            $table->string('price');
+            $table->string('image');
+
+            $table->unsignedBigInteger('product_id');
+
+            $table->foreign('product_id')
+                ->references('id')
+                ->on('products')
+                ->restrictOnUpdate()
+                ->restrictOnDelete();
+
+           
             $table->timestamps();
         });
     }

@@ -22,10 +22,28 @@ return new class extends Migration
             $table->boolean('stock');
             $table->float(column: 'star');
             $table->enum(column: 'remark', allowed: ['new', 'popular', 'trending','top','regular']);
+
+            // $table->unsignedBigInteger('category_id');
+            // $table->unsignedBigInteger('brand_id');
+            // $table->foreign('category_id')->references('id')->on('categories')->restrictOnDelete('cascade');
+            // $table->foreign('brand_id')->references('id')->on('brands')->restrictOnDelete('cascade');
+
             $table->unsignedBigInteger('category_id');
             $table->unsignedBigInteger('brand_id');
-            $table->foreign('category_id')->references('id')->on('categories')->restrictOnDelete('cascade');
-            $table->foreign('brand_id')->references('id')->on('brands')->restrictOnDelete('cascade');
+
+            $table->foreign('category_id')
+                ->references('id')
+                ->on('categories')
+                ->cascadeOnUpdate()
+                ->restrictOnDelete();
+
+            $table->foreign('brand_id')
+                ->references('id')
+                ->on('brands')
+                ->cascadeOnUpdate()
+                ->restrictOnDelete();
+
+
             $table->timestamps();
         });
     }
