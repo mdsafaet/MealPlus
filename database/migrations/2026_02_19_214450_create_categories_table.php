@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->string('categoryName', 50);
-            $table->string('categoryImg', 300)->nullable();
+            $table->string('categoryImg', 300);
 
             $table->timestamps();
         });
