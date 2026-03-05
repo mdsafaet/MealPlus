@@ -28,11 +28,11 @@ return new class extends Migration
             $table->string('ship_phone', 100);
             $table->string('ship_email', 100);
 
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('user_id')->unique();
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users')
-                ->restrictOnUpdate()
+                ->cascadeOnUpdate()
                 ->restrictOnDelete();
 
             $table->timestamps();

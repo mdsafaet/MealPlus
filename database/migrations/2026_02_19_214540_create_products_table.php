@@ -29,14 +29,13 @@ return new class extends Migration
             // $table->foreign('brand_id')->references('id')->on('brands')->restrictOnDelete('cascade');
 
             $table->unsignedBigInteger('category_id');
-            $table->unsignedBigInteger('brand_id');
-
             $table->foreign('category_id')
                 ->references('id')
                 ->on('categories')
                 ->cascadeOnUpdate()
                 ->restrictOnDelete();
 
+          $table->unsignedBigInteger('brand_id');
             $table->foreign('brand_id')
                 ->references('id')
                 ->on('brands')

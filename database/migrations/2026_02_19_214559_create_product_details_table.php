@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('colour', 1000);
             $table->string('size', 1000);
 
-            $table->unsignedBigInteger('product_id');
+            $table->unsignedBigInteger('product_id')->unique();
 
             $table->foreign('product_id')
                 ->references('id')

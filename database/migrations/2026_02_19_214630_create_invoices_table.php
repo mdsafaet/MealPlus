@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('ship_details');
             $table->string('transaction_id');
             $table->string('val_id');
-            $table->enum('delivery_status', ['pending', 'shipped', 'delivered'])->default('pending');
+            $table->enum('delivery_status', ['pending', 'processing', 'completed'])->default('pending');
             $table->string('payment_status');
              
 
