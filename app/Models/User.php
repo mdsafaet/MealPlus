@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\CustomerProfile;
+use App\Models\Role;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -67,4 +69,12 @@ class User extends Authenticatable  implements JWTSubject
     {
         return $this->belongsTo(Role::class);
     }
+
+
+        public function customerProfile()
+        {
+            return $this->hasOne(CustomerProfile::class);
+        }
+    
+ 
 }
