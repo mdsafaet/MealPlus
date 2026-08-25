@@ -2,17 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
+use App\Http\Requests\BrandRequest;
 use App\Models\Brand;
-use Illuminate\Http\Request;
+use App\Traits\ApiResponseTrait;
+use Illuminate\Support\Facades\Storage;
 
 class BrandController extends Controller
 {
+
+use ApiResponseTrait;
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+          $brands = Brand::latest()->get();
+          
+        return $this->success($brands, 'Brands fetched successfully');
     }
 
     /**
@@ -26,9 +33,23 @@ class BrandController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(BrandRequest  $request)
     {
-        //
+              $data = $request->validated();
+
+
+        if ($request->hasFile('image')) {
+
+            $data['image'] = $request
+                ->file('image')
+                ->store('brands', 'public');
+
+        }
+
+
+        $brand = Brand::create($data);
+
+        return $this->success($brand, 'Brand created successfully',201);
     }
 
     /**
@@ -36,7 +57,7 @@ class BrandController extends Controller
      */
     public function show(Brand $brand)
     {
-        //
+        return $this->success($brand, 'Brand fetched successfully');
     }
 
     /**
@@ -50,9 +71,26 @@ class BrandController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Brand $brand)
+    public function update(BrandRequest $request, Brand $brand)
     {
-        //
+       $data = $request->validated();
+
+        if ($request->hasFile('image')) {
+
+            if ($brand->image) {
+
+                Storage::disk('public')
+                    ->delete($brand->image);
+
+            }
+
+            $data['image'] = $request
+                ->file('image')
+                ->store('brands', 'public');
+
+        }
+        $brand->update($data);
+        return $this->success( $brand,'Brand updated successfully');
     }
 
     /**
@@ -60,6 +98,16 @@ class BrandController extends Controller
      */
     public function destroy(Brand $brand)
     {
-        //
+        if ($brand->image) {
+
+        Storage::disk('public')
+            ->delete($brand->image);
+
+    }
+
+    $brand->delete();
+
+    return $this->success(null, 'Brand deleted successfully');
+    
     }
 }

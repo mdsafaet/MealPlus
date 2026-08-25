@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Auth;
+namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class RegisterRequest extends FormRequest
+class BrandRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,10 +22,8 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-    'name' => 'required|max:255',
-    'email' => 'required|email|unique:users,email',
-    'password' => 'required|min:8|confirmed',
-    // 'role_id' => 'required|exists:roles,id',
+            'name' => 'required|string|max:100|unique:brands,name,' . $this->brand,
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ];
     }
 }

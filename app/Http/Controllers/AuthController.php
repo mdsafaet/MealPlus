@@ -12,54 +12,9 @@ use App\Models\User;
 class AuthController extends Controller
 {
 
-// public function register(RegisterRequest $request)
-// {
-//     dd('here');
- 
-//     $validatedData = $request->validated();
-
-//      $userData = User::create([
-//         'name' => $validatedData['name'],
-//         'email' => $validatedData['email'],
-//         'password' => bcrypt($validatedData['password']),
-//     ]);
-
-//     $token = auth()->login($userData);
-
-//    return response()->json([
-//         'message' => 'User successfully registered',
-//         'user' => $userData,
-//         'token' => $token,
-//     ], 201);
-
-    // public function register(UserRegisterRequest $request)
-    // {
-
-    //     $data = $request->validated();
 
 
-
-    //     $user = User::create([
-    //         'name' => $data['name'],
-    //         'email' => $data['email'],
-    //         'password' => bcrypt($data['password']),
-    //         'role_id' => $data['role_id'],
-
-
-
-    //     ]);
-
-    //     $token = auth('api')->login($user);
-
-    //     return $this->success($token);
-    // }
-
-
-
-
-// }
-
-public function create(Request $request, Role $role){
+public function create(Request $request){
 
   $data = $request->validate([
  'name' => 'required|string|max:100|unique:roles,name',
@@ -80,36 +35,25 @@ public function create(Request $request, Role $role){
 
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public function register(RegisterRequest $request)
 {
     
    $data = $request->validated();
+    $customerRole = Role::where('name','customer')->first();
 
     $user = User::create([
         'name' => $data['name'],
         'email' => $data['email'],
         'password' => bcrypt($data['password']),
-        'role_id' => $data['role_id'],
+        'role_id' => $customerRole->id,
     ]);
-     $token = auth('api')->login($user);
+
+      $token = auth('api')->login($user);
 
     return response()->json([
         'message' => 'User successfully registered',
         'user' => $user,
+        'token' => $token,
        
     ], 201);
 
@@ -139,7 +83,7 @@ public function create(Request $request, Role $role){
 
     public function me()
     {
-        return response()->json($this->guard('api')->user());
+        return response()->json($this->guard('api')->user()->load('role'));
     }
 
 
@@ -159,10 +103,13 @@ public function create(Request $request, Role $role){
 
     protected function respondWithToken($token)
     {
+
+        $user = $this->guard('api')->user()->load('role');
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => $this->guard('api')->factory()->getTTL() * 60
+            'expires_in' => $this->guard('api')->factory()->getTTL() * 60,  
+            'user' => $user
         ]);
     }
 

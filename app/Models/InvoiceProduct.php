@@ -9,24 +9,23 @@ use Illuminate\Database\Eloquent\Model;
 
 class InvoiceProduct extends Model
 {
-     protected $guarded = [];
+    protected $guarded = [];
 
 
-        public function invoice()
+    public function invoice()
     {
-        return $this->belongsTo(Invoice::class);    
-
+        return $this->belongsTo(Invoice::class);
     }
 
-     public function category()
-    {
-        return $this->belongsTo(Category::class);    
 
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
     }
 
-     public function brand()
+    public function user()
     {
-        return $this->belongsTo(Brand::class);    
-
+        return $this->belongsTo(User::class);
     }
 }

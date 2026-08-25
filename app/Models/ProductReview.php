@@ -8,20 +8,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProductReview extends Model
 {
-        protected $guarded = [];
+   protected $guarded = [];
 
 
-        public function product(){
-            return $this->belongsTo(Product::class);
-         }
+   public function product()
+   {
+      return $this->belongsTo(Product::class);
+   }
 
 
-         public function customerProfile(){
-            return $this->belongsTo(CustomerProfile::class);
-         }
+   public function customerProfile()
+   {
+      return $this->belongsTo(CustomerProfile::class, 'customer_id');
+   }
 
 
-    
-
-     
 }
