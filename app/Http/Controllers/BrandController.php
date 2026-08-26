@@ -11,14 +11,14 @@ use Illuminate\Support\Facades\Storage;
 class BrandController extends Controller
 {
 
-use ApiResponseTrait;
+    use ApiResponseTrait;
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-          $brands = Brand::latest()->get();
-          
+        $brands = Brand::latest()->get();
+
         return $this->success($brands, 'Brands fetched successfully');
     }
 
@@ -35,21 +35,21 @@ use ApiResponseTrait;
      */
     public function store(BrandRequest  $request)
     {
-              $data = $request->validated();
+        $data = $request->validated();
 
 
-        if ($request->hasFile('image')) {
+        if ($request->hasFile('brandImg')) {
 
-            $data['image'] = $request
-                ->file('image')
+            $data['brandImg'] = $request
+                ->file('brandImg')
                 ->store('brands', 'public');
-
         }
+
 
 
         $brand = Brand::create($data);
 
-        return $this->success($brand, 'Brand created successfully',201);
+        return $this->success($brand, 'Brand created successfully', 201);
     }
 
     /**
@@ -71,43 +71,44 @@ use ApiResponseTrait;
     /**
      * Update the specified resource in storage.
      */
-    public function update(BrandRequest $request, Brand $brand)
-    {
-       $data = $request->validated();
+public function update(BrandRequest $request, Brand $brand)
+{
 
-        if ($request->hasFile('image')) {
 
-            if ($brand->image) {
+    $data = $request->validated();
 
-                Storage::disk('public')
-                    ->delete($brand->image);
 
-            }
+    if ($request->hasFile('brandImg')) {
 
-            $data['image'] = $request
-                ->file('image')
-                ->store('brands', 'public');
-
+        if ($brand->brandImg) {
+            Storage::disk('public')
+                ->delete($brand->brandImg);
         }
-        $brand->update($data);
-        return $this->success( $brand,'Brand updated successfully');
+
+
+        $data['brandImg'] = $request->file('brandImg')->store('brands', 'public');
+
     }
+
+
+    $brand->update($data);
+
+
+    return $this->success($brand,'Brand updated successfully');
+}
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Brand $brand)
     {
-        if ($brand->image) {
+        if ($brand->brandImg) {
 
-        Storage::disk('public')
-            ->delete($brand->image);
+        Storage::disk('public')->delete($brand->brandImg);
+        }
 
-    }
+        $brand->delete();
 
-    $brand->delete();
-
-    return $this->success(null, 'Brand deleted successfully');
-    
+        return $this->success(null, 'Brand deleted successfully');
     }
 }

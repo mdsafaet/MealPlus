@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class BrandRequest extends FormRequest
+class CategoryRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,9 +21,10 @@ class BrandRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-           'brandName' => 'required|string|max:50|unique:brands,brandName,' . $this->brand?->id,
-            'brandImg' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+          return [
+            'categoryName' => 'required|string|max:50|unique:categories,categoryName,' . $this->category?->id,
+
+            'categoryImg' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BrandController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\MessageController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -33,6 +34,7 @@ Route::post('register',[AuthController::class,'register']);
 Route::group(['middleware' => ['auth:api','role:admin']], function ($router) {
 
    Route::apiResource('brands', BrandController::class);
+   Route::apiResource('categories', CategoryController::class);
 
 });
 
