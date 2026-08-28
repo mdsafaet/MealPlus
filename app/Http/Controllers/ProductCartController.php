@@ -2,17 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProductCartRequest;
 use App\Models\ProductCart;
-use Illuminate\Http\Request;
+use App\Traits\ApiResponseTrait;
+
 
 class ProductCartController extends Controller
 {
+    use ApiResponseTrait;
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $productCarts = ProductCart::latest()->get();
+        return $this->success($productCarts,'Product carts fetched successfully');
     }
 
     /**
@@ -26,9 +31,11 @@ class ProductCartController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ProductCartRequest $request)
     {
-        //
+        $data = $request->validated();
+        $productCart = ProductCart::create($data);
+        return $this->success($productCart,'Product cart created successfully',201);
     }
 
     /**
@@ -36,7 +43,7 @@ class ProductCartController extends Controller
      */
     public function show(ProductCart $productCart)
     {
-        //
+        return $this->success($productCart,'Product cart fetched successfully');
     }
 
     /**
@@ -50,9 +57,11 @@ class ProductCartController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ProductCart $productCart)
+    public function update(ProductCartRequest  $request, ProductCart $productCart)
     {
-        //
+        $data = $request->validated();
+        $productCart->update($data);
+        return $this->success($productCart,'Product cart updated successfully');
     }
 
     /**
@@ -60,6 +69,7 @@ class ProductCartController extends Controller
      */
     public function destroy(ProductCart $productCart)
     {
-        //
+        $productCart->delete();
+        return $this->success(null,'Product cart deleted successfully');
     }
 }

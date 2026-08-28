@@ -2,17 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
+use App\Http\Requests\ProductDetailRequest;
 use App\Models\ProductDetail;
+use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductDetailController extends Controller
 {
+    use ApiResponseTrait;
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+          $productDetails = ProductDetail::latest()->get();
+          return $this->success($productDetails,'Product details fetched successfully');
     }
 
     /**
@@ -26,9 +32,24 @@ class ProductDetailController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ProductDetailRequest  $request)
     {
-        //
+         $data = $request->validated();
+         
+         foreach(['img1','img2','img3','img4'] as $image){
+
+        if($request->hasFile($image)){
+
+            $data[$image] = $request
+                ->file($image)
+                ->store('products/details','public');
+
+        }
+    }
+
+
+         $productDetail = ProductDetail::create($data);
+         return $this->success($productDetail,'Product detail created successfully');
     }
 
     /**
@@ -36,7 +57,7 @@ class ProductDetailController extends Controller
      */
     public function show(ProductDetail $productDetail)
     {
-        //
+        return $this->success($productDetail,'Product detail fetched successfully');
     }
 
     /**
@@ -50,9 +71,24 @@ class ProductDetailController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ProductDetail $productDetail)
+    public function update(ProductDetailRequest $request, ProductDetail $productDetail)
     {
-        //
+        $data = $request->validated();
+         
+         foreach(['img1','img2','img3','img4'] as $image){
+
+        if($request->hasFile($image)){
+
+            $data[$image] = $request
+                ->file($image)
+                ->store('products/details','public');
+
+        }
+         }
+
+         $productDetail->update($data);
+         return $this->success($productDetail,'Product detail updated successfully');
+
     }
 
     /**
@@ -60,6 +96,19 @@ class ProductDetailController extends Controller
      */
     public function destroy(ProductDetail $productDetail)
     {
-        //
+           
+      foreach (['img1','img2','img3','img4'] as $image) {
+
+        if ($productDetail->$image) {
+
+            Storage::disk('public')
+                ->delete($productDetail->$image);
+
+        }
+
+    }
+     
+        $productDetail->delete();
+        return $this->success($productDetail,'Product detail deleted successfully');
     }
 }
