@@ -2,17 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
+use App\Http\Requests\SSLCommerzAccountRequest;
 use App\Models\SslcommerzAccount;
+use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
 
 class SslcommerzAccountController extends Controller
 {
+    use ApiResponseTrait;
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $sslcommerzAccounts = SslcommerzAccount::latest()->get();
+        return $this->success($sslcommerzAccounts,'SSLCommerz accounts fetched successfully');
     }
 
     /**
@@ -26,9 +31,11 @@ class SslcommerzAccountController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(SSLCommerzAccountRequest $request)
     {
-        //
+        $data = $request->validated();
+        $sslcommerzAccount = SslcommerzAccount::create($data);
+        return $this->success($sslcommerzAccount,'SSLCommerz account created successfully');
     }
 
     /**
@@ -36,7 +43,7 @@ class SslcommerzAccountController extends Controller
      */
     public function show(SslcommerzAccount $sslcommerzAccount)
     {
-        //
+        return $this->success($sslcommerzAccount,'SSLCommerz account fetched successfully');
     }
 
     /**
@@ -50,9 +57,11 @@ class SslcommerzAccountController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, SslcommerzAccount $sslcommerzAccount)
+    public function update(SSLCommerzAccountRequest $request, SslcommerzAccount $sslcommerzAccount)
     {
-        //
+        $data = $request->validated();
+        $sslcommerzAccount->update($data);
+        return $this->success($sslcommerzAccount,'SSLCommerz account updated successfully');
     }
 
     /**
@@ -60,6 +69,7 @@ class SslcommerzAccountController extends Controller
      */
     public function destroy(SslcommerzAccount $sslcommerzAccount)
     {
-        //
+        $sslcommerzAccount->delete();
+        return $this->success(null,'SSLCommerz account deleted successfully');
     }
 }

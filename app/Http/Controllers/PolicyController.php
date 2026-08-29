@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PolicyRequest;
 use App\Models\Policy;
+use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
 
 class PolicyController extends Controller
 {
+    use ApiResponseTrait;
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+         $policies = Policy::latest()->get();
+        return $this->success($policies, 'Policies retrieved successfully', 200);
     }
 
     /**
@@ -26,9 +30,10 @@ class PolicyController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(PolicyRequest $request)
     {
-        //
+        $policy = Policy::create($request->validated());
+        return $this->success($policy, 'Policy created successfully', 201);
     }
 
     /**
@@ -36,7 +41,7 @@ class PolicyController extends Controller
      */
     public function show(Policy $policy)
     {
-        //
+        return $this->success($policy, 'Policy retrieved successfully', 200);
     }
 
     /**
@@ -50,9 +55,11 @@ class PolicyController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Policy $policy)
+    public function update(PolicyRequest  $request, Policy $policy)
     {
-        //
+        $data = $request->validated();
+        $policy->update($data);
+        return $this->success($policy, 'Policy updated successfully', 200);
     }
 
     /**
@@ -60,6 +67,7 @@ class PolicyController extends Controller
      */
     public function destroy(Policy $policy)
     {
-        //
+        $policy->delete();
+        return $this->success(null, 'Policy deleted successfully', 200);
     }
 }

@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProductWishRequest;
 use App\Models\ProductWish;
+use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
 
 class ProductWishController extends Controller
 {
+    use ApiResponseTrait;
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $productWishes = ProductWish::latest()->get();
+        return $this->success($productWishes,'Product wishes fetched successfully');
     }
 
     /**
@@ -26,9 +30,11 @@ class ProductWishController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ProductWishRequest $request)
     {
-        //
+        $data = $request->validated();
+        $productWish = ProductWish::create($data);
+        return $this->success($productWish,'Product wish created successfully',201);
     }
 
     /**
@@ -36,7 +42,7 @@ class ProductWishController extends Controller
      */
     public function show(ProductWish $productWish)
     {
-        //
+        return $this->success($productWish,'Product wish fetched successfully');
     }
 
     /**
@@ -50,9 +56,11 @@ class ProductWishController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ProductWish $productWish)
+    public function update(ProductWishRequest  $request, ProductWish $productWish)
     {
-        //
+        $data = $request->validated();
+        $productWish->update($data);
+        return $this->success($productWish,'Product wish updated successfully');
     }
 
     /**
@@ -60,6 +68,7 @@ class ProductWishController extends Controller
      */
     public function destroy(ProductWish $productWish)
     {
-        //
+        $productWish->delete();
+        return $this->success(null,'Product wish deleted successfully');
     }
 }

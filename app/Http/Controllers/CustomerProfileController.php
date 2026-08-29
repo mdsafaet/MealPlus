@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CustomerProfileRequest;
 use App\Models\CustomerProfile;
+use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
 
 class CustomerProfileController extends Controller
 {
+    use ApiResponseTrait;
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $customerProfiles = CustomerProfile::all();
+        return $this->success($customerProfiles, 'Customer Profiles retrieved successfully', 200);
     }
 
     /**
@@ -26,9 +30,11 @@ class CustomerProfileController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CustomerProfileRequest $request)
     {
-        //
+        $data = $request->validated();
+        $customerProfile = CustomerProfile::create($data);
+        return $this->success($customerProfile, 'Customer Profile created successfully', 201);
     }
 
     /**
@@ -36,7 +42,7 @@ class CustomerProfileController extends Controller
      */
     public function show(CustomerProfile $customerProfile)
     {
-        //
+        return $this->success($customerProfile, 'Customer Profile retrieved successfully', 200);
     }
 
     /**
@@ -50,9 +56,11 @@ class CustomerProfileController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, CustomerProfile $customerProfile)
+    public function update(CustomerProfileRequest  $request, CustomerProfile $customerProfile)
     {
-        //
+        $data = $request->validated();
+        $customerProfile->update($data);
+        return $this->success($customerProfile, 'Customer Profile updated successfully', 200);
     }
 
     /**
@@ -60,6 +68,7 @@ class CustomerProfileController extends Controller
      */
     public function destroy(CustomerProfile $customerProfile)
     {
-        //
+        $customerProfile->delete();
+        return $this->success(null, 'Customer Profile deleted successfully', 200);
     }
 }

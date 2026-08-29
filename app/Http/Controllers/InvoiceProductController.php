@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\InvoiceProductRequest;
 use App\Models\InvoiceProduct;
+use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
 
 class InvoiceProductController extends Controller
 {
+     use ApiResponseTrait;
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $invoiceProducts = InvoiceProduct::latest()->get();
+        return $this->success($invoiceProducts,'Invoice products fetched successfully');
     }
 
     /**
@@ -26,9 +30,11 @@ class InvoiceProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(InvoiceProductRequest $request)
     {
-        //
+        $data = $request->validated();
+        $invoiceProduct = InvoiceProduct::create($data);
+        return $this->success($invoiceProduct,'Invoice product created successfully');
     }
 
     /**
@@ -36,7 +42,7 @@ class InvoiceProductController extends Controller
      */
     public function show(InvoiceProduct $invoiceProduct)
     {
-        //
+        return $this->success($invoiceProduct,'Invoice product fetched successfully');
     }
 
     /**
@@ -50,9 +56,11 @@ class InvoiceProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, InvoiceProduct $invoiceProduct)
+    public function update(InvoiceProductRequest  $request, InvoiceProduct $invoiceProduct)
     {
-        //
+        $data = $request->validated();
+        $invoiceProduct->update($data);
+        return $this->success($invoiceProduct,'Invoice product updated successfully');
     }
 
     /**
@@ -60,6 +68,7 @@ class InvoiceProductController extends Controller
      */
     public function destroy(InvoiceProduct $invoiceProduct)
     {
-        //
+        $invoiceProduct->delete();
+        return $this->success(null,'Invoice product deleted successfully');
     }
 }
